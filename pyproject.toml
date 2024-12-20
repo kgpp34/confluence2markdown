@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "confluence2markdown"
+version = "0.1.0"
+description = ""
+authors = ["YoungLH <974840768@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+markdownify = "^0.14.1"
+atlassian-python-api = "3.41.16"
+beautifulsoup4 = "4.12.3"
+fastapi = "0.115.6"
+python-dotenv = "^1.0.1"
+uvicorn = "0.34.0"
+loguru = "0.7.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

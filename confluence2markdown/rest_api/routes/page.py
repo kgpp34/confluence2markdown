@@ -7,7 +7,7 @@
 """
 from fastapi import APIRouter, HTTPException
 
-from services.confluence_service import ConfluenceService
+from confluence2markdown.services.confluence_service import ConfluenceService
 
 router = APIRouter()
 

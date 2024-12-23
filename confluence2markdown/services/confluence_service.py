@@ -7,8 +7,8 @@
 """
 from loguru import logger
 
-from confluence_api.confluence import ConfluenceAPI
-from md_converter.converter import MarkdownConverter
+from confluence2markdown.confluence_api.confluence import ConfluenceAPI
+from confluence2markdown.md_converter.converter import MarkdownConverter
 
 
 class ConfluenceService:

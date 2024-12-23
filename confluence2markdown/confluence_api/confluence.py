@@ -9,7 +9,7 @@
 from atlassian import Confluence
 from loguru import logger
 
-from config.config import CONFLUENCE_BASE_URL, CONFLUENCE_USERNAME, CONFLUENCE_PASSWORD
+from confluence2markdown.config.config import CONFLUENCE_BASE_URL, CONFLUENCE_USERNAME, CONFLUENCE_PASSWORD
 
 
 class ConfluenceAPI:

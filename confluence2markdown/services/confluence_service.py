@@ -11,6 +11,8 @@ from confluence2markdown.confluence_api.confluence import ConfluenceAPI
 from confluence2markdown.md_converter.converter import MarkdownConverter
 
 
+
+
 class ConfluenceService:
     def __init__(self):
         self.confluence_api = ConfluenceAPI()
@@ -24,14 +26,14 @@ class ConfluenceService:
             page_id (str): The ID of the Confluence page.
 
         Returns:
-            dict: A response containing the Markdown content of the page.
+            str: A response containing the Markdown content of the page.
         """
         logger.info(f"Fetching Markdown for page ID: {page_id}")
         try:
             html_content = self.confluence_api.get_page_content(page_id)
             markdown_content = self.markdown_converter.convert(html_content)
             logger.info(f"Successfully fetched Markdown for page ID: {page_id}")
-            return {"page_id": page_id, "markdown": markdown_content}
+            return markdown_content
         except Exception as e:
             logger.error(f"Failed to fetch Markdown for page ID {page_id}: {e}")
             raise

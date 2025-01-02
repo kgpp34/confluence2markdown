@@ -43,21 +43,29 @@ class ConfluenceService:
 
         Returns:
             dict: A response containing the Markdown content of the page and all its child pages.
+                 Only pages with non-empty content are included.
         """
         logger.info(f"Fetching Markdown for page ID: {page_id}")
         try:
             page_title, current_page = self.confluence_api.get_page_content(page_id)
             all_child_pages = self._get_all_child_pages(page_id)
 
-            markdown_content = self.markdown_converter.convert(current_page)
-            result = {page_title: markdown_content}
+            result = {}
 
-            # 转换所有子页面内容为 Markdown
+            # 转换当前页面内容为 Markdown（如果内容非空）
+            if current_page:  # 检查 current_page 是否非空
+                markdown_content = self.markdown_converter.convert(current_page)
+                if markdown_content:  # 检查转换后的 Markdown 是否非空
+                    result[page_title] = markdown_content
+
+            # 转换所有子页面内容为 Markdown（如果内容非空）
             for child_page in all_child_pages:
                 child_page_title = child_page['title']
-                child_page_html_content = child_page["body"]["storage"]["value"]
-                child_markdown_content = self.markdown_converter.convert(child_page_html_content)
-                result[child_page_title] = child_markdown_content
+                child_page_html_content = child_page.get("body", {}).get("storage", {}).get("value", "")
+                if child_page_html_content:  # 检查子页面内容是否非空
+                    child_markdown_content = self.markdown_converter.convert(child_page_html_content)
+                    if child_markdown_content:  # 检查转换后的 Markdown 是否非空
+                        result[child_page_title] = child_markdown_content
 
             logger.info(f"Successfully fetched Markdown for page ID: {page_id} and all its child pages")
             return result

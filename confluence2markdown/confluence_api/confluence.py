@@ -48,13 +48,34 @@ class ConfluenceAPI:
             page_id (str): The ID of the Confluence page.
 
         Returns:
+            str: the page title
             str: The HTML content of the page.
         """
         logger.info(f"Fetching content for page ID: {page_id}")
         try:
             page = self.confluence.get_page_by_id(page_id, expand="body.storage")
             logger.info(f"Successfully fetched content for page ID: {page_id}")
-            return page["body"]["storage"]["value"]
+            return page["title"], page["body"]["storage"]["value"]
         except Exception as e:
             logger.error(f"Failed to fetch content for page ID {page_id}: {e}")
             raise
+
+    def get_page_children(self, page_id: str):
+        """
+        Retrieve the children content of a specified page.
+
+        Args:
+            page_id (str): The ID of the Confluence page.
+
+        Returns:
+            list: the child pages of page_id
+        """
+        logger.info(f"Fetching content for page ID children: {page_id}")
+        try:
+            child_pages = self.confluence.get_page_child_by_type(page_id, type="page", start=None, limit=None, expand="body.storage")
+            logger.info(f"Successfully fetched content for page ID children: {page_id}")
+            return child_pages
+        except Exception as e:
+            logger.error(f"Failed to fetch content for page ID children {page_id}: {e}")
+            raise
+

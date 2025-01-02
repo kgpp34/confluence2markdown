@@ -14,6 +14,27 @@ import markdown
 
 
 def fix_markdown(markdown_content: str) -> str:
+    # 保护代码块中的内容
+    def protect_code_blocks(content: str):
+        # 使用正则表达式匹配代码块
+        code_block_pattern = re.compile(r'```.*?```', re.DOTALL)
+        code_blocks = code_block_pattern.findall(content)
+
+        # 将代码块替换为占位符
+        for i, code_block in enumerate(code_blocks):
+            content = content.replace(code_block, f"__CODE_BLOCK_{i}__")
+
+        return content, code_blocks
+
+    # 恢复代码块中的内容
+    def restore_code_blocks(content: str, code_blocks: list) -> str:
+        for i, code_block in enumerate(code_blocks):
+            content = content.replace(f"__CODE_BLOCK_{i}__", code_block)
+        return content
+
+    # 保护代码块
+    markdown_content, code_blocks = protect_code_blocks(markdown_content)
+
     # 修复标题
     markdown_content = re.sub(r'^(={3,})$', r'# \1', markdown_content, flags=re.MULTILINE)
     markdown_content = re.sub(r'^(-{3,})$', r'## \1', markdown_content, flags=re.MULTILINE)
@@ -27,6 +48,17 @@ def fix_markdown(markdown_content: str) -> str:
 
     # 修复代码块
     markdown_content = re.sub(r'^```\n', r'```', markdown_content, flags=re.MULTILINE)
+
+    # 恢复代码块
+    markdown_content = restore_code_blocks(markdown_content, code_blocks)
+
+    # 替换代码块中的 Markdown 标题为注释
+    def replace_headers_in_code_blocks(content: str) -> str:
+        # 使用正则表达式匹配代码块
+        code_block_pattern = re.compile(r'```.*?```', re.DOTALL)
+        return code_block_pattern.sub(lambda match: match.group(0).replace('#', '//'), content)
+
+    markdown_content = replace_headers_in_code_blocks(markdown_content)
 
     return markdown_content
 
